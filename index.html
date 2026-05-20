@@ -2,32 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>贪吃蛇游戏</title>
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background: #F0FFF0;
+            touch-action: none;
         }
         canvas {
-            border: 2px solid #fff;
+            border: 2px solid #333;
+            max-width: 90vw;
+            max-height: 55vh;
         }
         .score {
-            position: absolute;
-            top: 20px;
-            color: white;
-            font-size: 24px;
+            color: #333;
+            font-size: 20px;
             font-family: Arial;
+            margin: 10px;
         }
+        /* 手机方向按钮 */
+        .controls {
+            display: grid;
+            grid-template-columns: 70px 70px 70px;
+            grid-template-rows: 70px 70px;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .btn {
+            width: 70px;
+            height: 70px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .btn:active {
+            background: #666;
+        }
+        .up { grid-column: 2; grid-row: 1; }
+        .left { grid-column: 1; grid-row: 2; }
+        .down { grid-column: 2; grid-row: 2; }
+        .right { grid-column: 3; grid-row: 2; }
     </style>
 </head>
 <body>
     <div class="score">得分: <span id="score">0</span></div>
     <canvas id="game" width="400" height="400"></canvas>
+    
+    <!-- 手机触摸按钮 -->
+    <div class="controls">
+        <button class="btn up" onclick="changeDirection(0, -20)">↑</button>
+        <button class="btn left" onclick="changeDirection(-20, 0)">←</button>
+        <button class="btn down" onclick="changeDirection(0, 20)">↓</button>
+        <button class="btn right" onclick="changeDirection(20, 0)">→</button>
+    </div>
+
     <script>
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
@@ -38,6 +78,12 @@
         let dx = 20;
         let dy = 0;
         let score = 0;
+        
+        // 手机按钮控制方向
+        function changeDirection(newDx, newDy) {
+            if (newDx !== 0 && dx === 0) { dx = newDx; dy = newDy; }
+            if (newDy !== 0 && dy === 0) { dx = newDx; dy = newDy; }
+        }
         
         function draw() {
             ctx.fillStyle = '#FFFFFF';
@@ -77,6 +123,7 @@
             return false;
         }
         
+        // 电脑键盘控制
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -20; }
             if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 20; }
